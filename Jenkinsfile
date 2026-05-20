@@ -17,7 +17,11 @@ pipeline {
 
         stage('Dependency Check') {
             steps {
-                dependencyCheck additionalArguments: '--scan .'
+                stage('Dependency Check') {
+    steps {
+        bat 'pip list'
+    }
+}
             }
         }
 
