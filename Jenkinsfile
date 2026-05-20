@@ -5,43 +5,34 @@ pipeline {
 
         stage('Clone Repository') {
             steps {
-                git 'YOUR_GITHUB_REPO_LINK'
+                git 'https://github.com/Vandana-ydv/presentation.git'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                bat 'npm install'
+                bat 'pip install -r requirements.txt'
             }
         }
 
         stage('Dependency Check') {
             steps {
-                stage('Dependency Check') {
-    steps {
-        bat 'pip list'
-    }
-}
+                bat 'pip list'
+            }
+        }
+
+        stage('Security Scan') {
+            steps {
+                bat 'pip install safety'
+                bat 'safety check'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t myproject .'
+                bat 'docker build -t smartpark .'
             }
         }
 
-        stage('Run Security Scan') {
-            steps {
-                bat 'npm audit'
-            }
-        }
-
-        stage('Push Docker Image') {
-            steps {
-                bat 'docker tag myproject YOUR_DOCKER_USERNAME/myproject'
-                bat 'docker push YOUR_DOCKER_USERNAME/myproject'
-            }
-        }
     }
 }
