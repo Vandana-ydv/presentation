@@ -1,68 +1,42 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_IMAGE = "YOUR_DOCKERHUB_USERNAME/smart-parking"
-    }
-
-    tools {
-        sonarQubeScanner 'sonar-scanner'
-    }
-
     stages {
 
         stage('Clone Repository') {
             steps {
-                git branch: 'main',
-                url: 'https://github.com/sirrj4vis/smart-parking.git'
+                git 'YOUR_GITHUB_REPO_LINK'
             }
         }
 
-        stage('SonarCloud Analysis') {
+        stage('Install Dependencies') {
             steps {
-                withSonarQubeEnv('sonarcloud') {
-
-                    bat """
-                    sonar-scanner ^
-                    -Dsonar.projectKey=sirrj4vis_smart-parking ^
-                    -Dsonar.organization=sirrj4vis ^
-                    -Dsonar.sources=. ^
-                    -Dsonar.host.url=https://sonarcloud.io
-                    """
-                }
+                bat 'npm install'
             }
         }
 
-        stage('Trivy Scan') {
+        stage('Dependency Check') {
             steps {
-                bat 'trivy fs . > trivy-report.txt'
+                dependencyCheck additionalArguments: '--scan .'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t %DOCKER_IMAGE% .'
+                bat 'docker build -t myproject .'
+            }
+        }
+
+        stage('Run Security Scan') {
+            steps {
+                bat 'npm audit'
             }
         }
 
         stage('Push Docker Image') {
             steps {
-
-                withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub',
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
-
-                    bat 'docker login -u %DOCKER_USER% -p %DOCKER_PASS%'
-                    bat 'docker push %DOCKER_IMAGE%'
-                }
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo 'Deployment handled through Render'
+                bat 'docker tag myproject YOUR_DOCKER_USERNAME/myproject'
+                bat 'docker push YOUR_DOCKER_USERNAME/myproject'
             }
         }
     }
