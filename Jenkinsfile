@@ -5,20 +5,20 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                bat 'py -m pip install -r requirements.txt'
+                bat '"C:\\WINDOWS\\py.exe" -m pip install -r requirements.txt'
             }
         }
 
         stage('Dependency Check') {
             steps {
-                bat 'py -m pip list'
+                bat '"C:\\WINDOWS\\py.exe" -m pip list'
             }
         }
 
         stage('Security Scan') {
             steps {
-                bat 'py -m pip install safety'
-                bat 'py -m safety check'
+                bat '"C:\\WINDOWS\\py.exe" -m pip install safety'
+                bat '"C:\\WINDOWS\\py.exe" -m safety check'
             }
         }
 
