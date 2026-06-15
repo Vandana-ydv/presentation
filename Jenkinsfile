@@ -18,11 +18,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                // change this based on your project type
-                // for Node.js:
-                bat 'npm install'
-                // for Python:
-                // bat 'pip install -r requirements.txt'
+                bat 'pip install -r requirements.txt'
             }
         }
 
@@ -68,7 +64,9 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                bat 'docker run -d -p 3000:3000 --name smartpark-container smartpark'
+                bat 'docker stop smartpark-container || exit 0'
+                bat 'docker rm smartpark-container || exit 0'
+                bat 'docker run -d -p 5000:5000 --name smartpark-container smartpark'
             }
         }
 
