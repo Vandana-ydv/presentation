@@ -10,10 +10,9 @@ pipeline {
                 checkout scm
             }
         }
-
         stage('Clone Repository') {
             steps {
-                bat 'git clone https://github.com/yourusername/smart-parking.git temp-clone || echo "Already checked out"'
+                bat 'echo Repository already checked out via SCM'
             }
         }
 
