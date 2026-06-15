@@ -1,10 +1,7 @@
 pipeline {
     agent any
 
-    tools {
-        // must match the name you gave in Manage Jenkins -> Tools -> SonarQube Scanner
-        // remove this block if you didn't configure a named scanner tool
-    }
+    
 
     stages {
 
@@ -30,9 +27,9 @@ pipeline {
             }
         }
 
-        stage('Dependency Check') {
+       stage('Dependency Check') {
             steps {
-                dependencyCheck additionalArguments: '--scan .'
+                dependencyCheck additionalArguments: '--scan .', odcInstallation: 'DP-Check'
                 dependencyCheckPublisher()
             }
         }
